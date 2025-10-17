@@ -7,7 +7,7 @@ def test_read_root():
     response = client.get("/")
     assert response.status_code == 200
     assert "message" in response.json()
-    assert response.json()["message"] == "Hello World from ML Engineering!"
+    assert response.json()["message"] == "Hello World!"
 
 def test_health_check():
     response = client.get("/health")
