@@ -1,0 +1,38 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        cd app
+        pip install -r requirements.txt
+        pip install pytest pytest-cov httpx
+    
+    - name: Run tests
+      run: |
+        cd app
+        pytest
+    
+    - name: Build Docker image
+      run: |
+        docker build -t hello-world-ml:${{ github.sha }} .
+    
+    - name: Docker image built successfully
+      run: echo "Docker image hello-world-ml:${{ github.sha }} built successfully"

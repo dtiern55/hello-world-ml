@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-ml
+  labels:
+    app: hello-world-ml
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-world-ml
+  template:
+    metadata:
+      labels:
+        app: hello-world-ml
+    spec:
+      containers:
+      - name: hello-world-ml
+        image: hello-world-ml:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
