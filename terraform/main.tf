@@ -8,8 +8,13 @@ terraform {
     }
   }
   
-  # Empty backend - will be configured at runtime
-  # backend "s3" {}
+  backend "s3" {
+    bucket         = "hello-world-ml-tf-state-942497601151"
+    key            = "dev/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "hello-world-ml-tf-locks"
+    encrypt        = true
+  }
 }
 
 provider "aws" {
