@@ -1,6 +1,0 @@
-environment = "prod"
-cluster_name = "hello-world-ml-prod"
-node_instance_types = ["t3.medium"]
-desired_node_count = 3
-min_node_count = 2
-max_node_count = 5

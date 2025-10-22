@@ -9,7 +9,7 @@ terraform {
   }
   
   # Empty backend - will be configured at runtime
-  backend "s3" {}
+  # backend "s3" {}
 }
 
 provider "aws" {
