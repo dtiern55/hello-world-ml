@@ -8,7 +8,7 @@ def read_root():
     return {
         "message": "Hello World!",
         "timestamp": datetime.now().isoformat(),
-        "version": "1.0.0"
+        "version": "1.0.1"
     }
 
 @app.get("/health")
