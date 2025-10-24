@@ -41,8 +41,8 @@ variable "aws_region" {
 variable "default_tags" {
   description = "Default tags for all resources"
   type        = map(string)
-  default     = {
-    Project     = "hello-world-ml"
-    ManagedBy   = "Terraform"
+  default = {
+    Project   = "hello-world-ml"
+    ManagedBy = "Terraform"
   }
 }
