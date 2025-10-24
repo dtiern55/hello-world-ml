@@ -211,31 +211,13 @@ docker run -p 8000:8000 hello-world-ml:latest
 
 ## 🔐 Security
 
-**Best Practices Implemented:**
+**Practices Implemented:**
 - Private subnets for worker nodes (not directly accessible from internet)
 - NAT Gateway for secure outbound internet access
 - AWS Secrets Manager for sensitive data (credentials stored in GitHub Secrets)
 - Terraform state encryption at rest (S3 server-side encryption)
 - Container image scanning enabled in ECR
 - Resource tagging for cost tracking and governance
-
----
-
-## 💰 Cost Optimization
-
-**Current monthly cost (dev environment):**
-- EKS Control Plane: ~$75/month
-- EC2 (1x t3.small): ~$15/month
-- NAT Gateway: ~$32/month
-- Load Balancer: ~$16/month
-- Storage (S3, EBS): ~$2/month
-- **Total: ~$140/month**
-
-**Cost-saving options:**
-- Scale nodes to 0 when not in use
-- Use Spot instances for non-prod
-- Share NAT Gateway across environments
-- Delete entire stack with `terraform destroy`
 
 ---
 
