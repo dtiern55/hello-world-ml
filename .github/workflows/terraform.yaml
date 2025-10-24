@@ -59,7 +59,7 @@ jobs:
       run: terraform plan -var-file=vars/dev.tfvars -out=tfplan
     
     - name: Upload Plan
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: tfplan
         path: terraform/tfplan
