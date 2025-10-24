@@ -2,14 +2,24 @@ name: Terraform CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
     paths:
       - 'terraform/**'
+      - '.github/workflows/terraform.yaml'
   pull_request:
-    branches: [ main ]
+    branches: [ main, dev ]
     paths:
       - 'terraform/**'
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
 
 env:
   AWS_REGION: us-east-1
@@ -26,6 +36,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Determine environment
+      id: determine-env
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+        elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+        else
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+        fi
     
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -43,7 +64,7 @@ jobs:
       run: |
         terraform init \
           -backend-config="bucket=hello-world-ml-tf-state-942497601151" \
-          -backend-config="key=dev/terraform.tfstate" \
+          -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate" \
           -backend-config="region=us-east-1" \
           -backend-config="dynamodb_table=hello-world-ml-tf-locks" \
           -backend-config="encrypt=true"
@@ -61,7 +82,7 @@ jobs:
     - name: Upload Plan
       uses: actions/upload-artifact@v4
       with:
-        name: tfplan
+        name: tfplan-${{ env.ENVIRONMENT }}
         path: terraform/tfplan
 
   terraform-apply:
@@ -72,12 +93,21 @@ jobs:
     defaults:
       run:
         working-directory: terraform
-    environment:
-      name: dev
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Determine environment
+      id: determine-env
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+        elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+        else
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+        fi
     
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -95,10 +125,10 @@ jobs:
       run: |
         terraform init \
           -backend-config="bucket=hello-world-ml-tf-state-942497601151" \
-          -backend-config="key=dev/terraform.tfstate" \
+          -backend-config="key=${{ env.ENVIRONMENT }}/terraform.tfstate" \
           -backend-config="region=us-east-1" \
           -backend-config="dynamodb_table=hello-world-ml-tf-locks" \
           -backend-config="encrypt=true"
     
-    - name: Terraform Apply
-      run: terraform apply -var-file=vars/dev.tfvars -auto-approve
+    - name: Terraform Apply (${{ env.ENVIRONMENT }})
+      run: terraform apply -var-file=vars/${{ env.ENVIRONMENT }}.tfvars -auto-approve
