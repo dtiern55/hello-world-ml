@@ -12,8 +12,12 @@ env/
 .terraform/
 *.tfstate
 *.tfstate.*
-*.tfvars
+*.tfstate.backup
 .terraform.lock.hcl
+
+# Terraform secrets (if you add any later)
+# Comment out the line below to commit your tfvars
+# *.tfvars
 
 # IDE
 .vscode/
@@ -24,3 +28,9 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Backups
+terraform-aws-backup/
+
+# Local Kubernetes
+k8s/
