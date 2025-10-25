@@ -85,7 +85,14 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
-        # Update the image in deployment
+        # Apply service account first
+        kubectl apply -f k8s-aws/service-account.yaml
+        
+        # Apply or update deployment and service
+        kubectl apply -f k8s-aws/deployment.yaml
+        kubectl apply -f k8s-aws/service.yaml
+        
+        # Update the image to the new version
         kubectl set image deployment/hello-world-ml hello-world-ml=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
         # Wait for rollout to complete
