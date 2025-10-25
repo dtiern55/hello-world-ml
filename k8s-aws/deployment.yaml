@@ -15,11 +15,15 @@ spec:
       labels:
         app: hello-world-ml
     spec:
+      serviceAccountName: hello-world-ml-sa
       containers:
       - name: hello-world-ml
         image: 942497601151.dkr.ecr.us-east-1.amazonaws.com/hello-world-ml-dev-app:latest
         ports:
         - containerPort: 8000
+        env:
+        - name: AWS_REGION
+          value: "us-east-1"
         resources:
           requests:
             memory: "128Mi"
