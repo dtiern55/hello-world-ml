@@ -53,6 +53,32 @@ resource "aws_iam_role_policy" "bedrock_access" {
   })
 }
 
+# IAM policy for CloudWatch agent - attach to NODE role
+resource "aws_iam_role_policy" "cloudwatch_agent" {
+  name = "cloudwatch-agent-policy"
+  role = module.eks.eks_managed_node_groups["main"].iam_role_name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:PutMetricData",
+          "ec2:DescribeVolumes",
+          "ec2:DescribeTags",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams",
+          "logs:DescribeLogGroups",
+          "logs:CreateLogStream",
+          "logs:CreateLogGroup"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 # Output the role ARN so we can use it in Kubernetes service account
 output "app_role_arn" {
   description = "IAM role ARN for application pods"
