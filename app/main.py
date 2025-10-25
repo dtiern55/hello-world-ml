@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 from pydantic import BaseModel
-import boto3  # <-- This MUST be here
+import boto3
 import json
 import os
 
