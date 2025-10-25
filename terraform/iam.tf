@@ -48,7 +48,14 @@ resource "aws_iam_role_policy" "bedrock_access" {
         ]
         # Only Claude models, no other Bedrock models
         Resource = "arn:aws:bedrock:${var.aws_region}::foundation-model/anthropic.claude-*"
-      }
+      },
+	  {
+		Effect = "Allow"
+		Action = [
+			"aws-marketplace:ViewSubscriptions"
+		]
+		Resource = "*"
+	}
     ]
   })
 }
