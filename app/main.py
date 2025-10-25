@@ -1,5 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from datetime import datetime
+from pydantic import BaseModel
+import boto3  # <-- This MUST be here
+import json
+import os
 
 app = FastAPI(
     title="ML Engineering Demo with Claude",
